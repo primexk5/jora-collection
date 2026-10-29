@@ -1,8 +1,16 @@
 # JORA Collection
 
-React + Vite storefront. Run `npm ci`, then `npm run dev` for local development.
+React + Vite storefront. From the repository root:
+
+```sh
+cd frontend
+npm ci
+npm run dev
+```
 
 ## Build and verify
+
+Run these commands inside `frontend/`:
 
 ```sh
 npm run build
@@ -10,13 +18,13 @@ npm test
 npm run lint
 ```
 
-The build generates one static HTML document per product in `dist/product/`, with product-specific Open Graph tags already in the HTML head. JavaScript is not required to read these tags. The React app reads `/product/<id>` to show the correct product. Existing `#bag/<id>` bookmarks remain supported.
+The build generates one static HTML document per product in `frontend/dist/product/`, with product-specific Open Graph tags already in the HTML head. JavaScript is not required to read these tags. The React app reads `/product/<id>` to show the correct product. Existing `#bag/<id>` bookmarks remain supported.
 
 ## Vercel hosting
 
-Use `frontend` as the Vercel project root, `npm run build` as the build command, and `dist` as the output directory. `vercel.json` enables clean URLs so `/product/ada-top-handle` serves `dist/product/ada-top-handle.html`. Do not add a catch-all rewrite to the homepage: it would mask the product metadata.
+Use `frontend` as the Vercel project root, `npm run build` as the build command, and `dist` as the output directory. `frontend/vercel.json` enables clean URLs so `/product/ada-top-handle` serves `dist/product/ada-top-handle.html`. Do not add a catch-all rewrite to the homepage: it would mask the product metadata.
 
-The canonical origin is `https://jora-collection.vercel.app`, configured in `src/lib/site.js`. Update it and rebuild if the domain changes. Deploy all of `dist`, including `product` and `og`. Preview images in `public/og` are 800 × 800 JPEGs under 300 KB. When adding products, add a matching optimized preview image; missing or oversized images fail the build.
+The canonical origin is `https://jora-collection.vercel.app`, configured in `frontend/src/lib/site.js`. Update it and rebuild if the domain changes. Deploy all of `dist`, including `product` and `og`. Preview images in `frontend/public/og` are 800 × 800 JPEGs under 300 KB. When adding products, add a matching optimized preview image; missing or oversized images fail the build.
 
 ## WhatsApp orders
 
@@ -37,7 +45,7 @@ The automated checks validate generated HTML, actual JPEG dimensions and sizes, 
 ## Frontend structure
 
 ```text
-src/
+frontend/src/
   assets/brand/           Brand reference files
   components/
     atoms/               Icons, logo, bag artwork and dividers
@@ -54,6 +62,6 @@ src/
   main.jsx               React entry point
 ```
 
-Place reusable visual primitives in atoms and small combinations in molecules. Organisms compose larger sections and interactive flows. Templates define page structure; pages supply route content. Keep business logic in `lib` or hooks rather than the visual layers. Use direct imports from each component's layer. Static public assets and build scripts stay outside `src`.
+Place reusable visual primitives in atoms and small combinations in molecules. Organisms compose larger sections and interactive flows. Templates define page structure; pages supply route content. Keep business logic in `lib` or hooks rather than the visual layers. Use direct imports from each component's layer. Static public assets and build scripts stay in `frontend/public/` and `frontend/scripts/`, outside `frontend/src/`.
 
 Mobile tabs link to Home, Shop, New In, Lookbook and Contact. The shopping bag remains available from the header.
