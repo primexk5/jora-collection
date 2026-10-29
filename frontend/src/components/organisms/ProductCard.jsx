@@ -1,9 +1,11 @@
+import { useContext } from 'react'
+import { CartActionsContext } from '../../context/CartActionsContext'
 import { productPath } from '../../lib/cart'
 import OrderButton from './OrderButton'
-import { CATEGORIES } from '../../data/products'
+import { CATEGORIES, defaultSize } from '../../data/products'
 import { formatNaira } from '../../lib/site'
 import BagArt from '../atoms/BagArt'
-import { ArrowIcon, WhatsAppIcon } from '../atoms/Icons'
+import { ArrowIcon, BagIcon, PlusIcon, WhatsAppIcon } from '../atoms/Icons'
 
 const BADGE_STYLES = {
   New: 'bg-jora-red text-white',
@@ -11,6 +13,7 @@ const BADGE_STYLES = {
 }
 
 export default function ProductCard({ product, delay = 0 }) {
+  const addToCart = useContext(CartActionsContext)
   const category = CATEGORIES.find((item) => item.id === product.category)
 
   return (
@@ -34,16 +37,25 @@ export default function ProductCard({ product, delay = 0 }) {
             />
             {product.badge && (
               <span
-                className={`absolute left-4 top-4 rounded-full px-3 py-1 text-[9px] font-medium uppercase tracking-[0.2em] ${
+                className={`absolute left-2 top-3 max-w-[calc(100%-4rem)] rounded-full px-2 py-1 text-[7px] font-medium uppercase tracking-[0.08em] md:left-4 md:top-4 md:px-3 md:text-[9px] md:tracking-[0.2em] ${
                   BADGE_STYLES[product.badge] ?? 'bg-jora-gold text-jora-charcoal'
                 }`}
               >
                 {product.badge}
               </span>
             )}
-            <span className="absolute right-4 top-4 grid h-2.5 w-2.5 place-items-center rounded-full bg-jora-red" />
           </div>
         </a>
+        {addToCart && <button
+          type="button"
+          onClick={() => addToCart({ product, color: product.palette, size: defaultSize(product).label, quantity: 1 })}
+          aria-label={`Add ${product.name} to bag`}
+          title="Add to bag"
+          className="absolute right-2 top-2 z-10 grid h-11 w-11 place-items-center rounded-full border border-jora-charcoal/10 bg-white/95 text-jora-charcoal shadow-sm transition hover:border-jora-red hover:bg-jora-red hover:text-white active:scale-95"
+        >
+          <BagIcon className="h-5 w-5" />
+          <span className="absolute bottom-1 right-1 grid h-3.5 w-3.5 place-items-center rounded-full bg-jora-red text-white"><PlusIcon className="h-2.5 w-2.5" /></span>
+        </button>}
         <div className="product-order-action pointer-events-none absolute inset-x-2 bottom-3 z-10 md:inset-x-4 md:bottom-4 translate-y-3 opacity-0 transition-all duration-400 group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:translate-y-0 group-focus-within:opacity-100">
           <OrderButton product={product}
             className="pointer-events-auto flex items-center justify-center gap-1 rounded-full bg-jora-navy px-2 py-3 text-[9px] font-medium uppercase tracking-[0.04em] md:gap-2 md:px-4 md:text-[10px] md:tracking-[0.16em] text-white transition hover:bg-jora-red"

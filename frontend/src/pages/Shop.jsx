@@ -1,6 +1,6 @@
 import { searchProducts } from '../lib/search'
 import { useState } from 'react'
-import { ArrowIcon, GiftIcon, SearchIcon, SparkIcon, WhatsAppIcon } from '../components/atoms/Icons'
+import { ArrowIcon, GiftIcon, SearchIcon, DeliveryIcon, WhatsAppIcon } from '../components/atoms/Icons'
 import ProductGrid from '../components/organisms/ProductGrid'
 import SectionHeading from '../components/molecules/SectionHeading'
 import { CATEGORIES, PRODUCTS } from '../data/products'
@@ -142,7 +142,7 @@ export default function Shop({ category, onCategoryChange, onOpenQuiz, searchQue
                 body: 'Tell us it is a gift and we will wrap it with care.',
               },
               {
-                icon: SparkIcon,
+                icon: DeliveryIcon,
                 title: `${SITE.freeDeliveryNote}`,
                 body: 'Nationwide delivery available, tracked on WhatsApp.',
               },

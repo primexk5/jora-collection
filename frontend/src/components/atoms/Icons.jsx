@@ -169,3 +169,13 @@ export function SocialIcon({ name, className = 'h-4 w-4' }) {
 export function SearchIcon({ className = 'h-5 w-5' }) {
   return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" aria-hidden="true" className={className}><circle cx="10.5" cy="10.5" r="6.5" /><path d="m16 16 4.5 4.5" /></svg>
 }
+
+export function DeliveryIcon({ className = 'h-5 w-5' }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className={className}>
+      <path d="M3 16V6a1 1 0 0 1 1-1h10v12H8M14 9h4l3 4v4h-2M14 17h1M3 17H2M14 13h7" />
+      <circle cx="6" cy="17" r="2" />
+      <circle cx="17" cy="17" r="2" />
+    </svg>
+  )
+}

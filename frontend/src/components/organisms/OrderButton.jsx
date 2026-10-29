@@ -1,12 +1,17 @@
+import { canCopyOrderImage, copyOrderImages } from '../../lib/orderImages'
 import { useEffect, useId, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { defaultSize } from '../../data/products'
-import { cartMessage } from '../../lib/cart'
+import { cartMessage, resolveItem } from '../../lib/cart'
 import { SITE, waLink } from '../../lib/site'
 import { WhatsAppIcon } from '../atoms/Icons'
 
 export default function OrderButton({ product, items, children, ...props }) {
   const [order, setOrder] = useState(null)
+  const [files, setFiles] = useState([])
+  const [status, setStatus] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [copying, setCopying] = useState(false)
   const dialog = useRef(null)
   const titleId = useId()
 
@@ -39,10 +44,50 @@ export default function OrderButton({ product, items, children, ...props }) {
     }
   }, [order])
 
+  useEffect(() => {
+    if (!order) return
+    const controller = new AbortController()
+    Promise.all(order.images.map(async ({ url, filename }) => {
+      const response = await fetch(url, { signal: controller.signal })
+      if (!response.ok) throw new Error('Image unavailable')
+      const blob = await response.blob()
+      if (!blob.type.startsWith('image/')) throw new Error('Invalid image')
+      return new File([blob], filename, { type: blob.type })
+    })).then((images) => {
+      if (!controller.signal.aborted) {
+        setFiles(images)
+        setStatus('Your bag images are ready to copy.')
+      }
+    }).catch((error) => {
+      if (!controller.signal.aborted && error.name !== 'AbortError') setStatus('Bag images could not load. Close this window and try again.')
+    }).finally(() => { if (!controller.signal.aborted) setLoading(false) })
+    return () => controller.abort()
+  }, [order])
+
+  const canCopy = canCopyOrderImage()
+  const openChat = async () => {
+    if (loading || copying || !files.length) return
+    setCopying(true)
+    try {
+      await copyOrderImages(files, order.images.map((image) => image.label))
+      setStatus('Images copied. Paste them in the JORA WhatsApp chat, then send with your order details.')
+      window.location.assign(waLink(order.message))
+    } catch {
+      setStatus('Your browser could not copy the images. Allow clipboard access and tap the button again. You can also send just the order text below.')
+    } finally { setCopying(false) }
+  }
+
   return <>
     <button {...props} type="button" onClick={() => {
       const selected = items ?? [{ product, color: product.palette, size: defaultSize(product).label, quantity: 1 }]
-      setOrder({ message: cartMessage(selected) })
+      const images = [...new Map(selected.map(resolveItem).filter(Boolean).map(({ product: bag, color }) => {
+        const filename = `${bag.id}-${color.id}.png`
+        return [filename, { filename, label: `${bag.name} · ${color.name}`, url: `${import.meta.env.BASE_URL}bags/${filename}` }]
+      })).values()]
+      setFiles([])
+      setLoading(true)
+      setStatus('Preparing bag images…')
+      setOrder({ message: cartMessage(selected), images })
     }}>{children}</button>
     {order && createPortal(
       <div className="fixed inset-0 z-[80] flex items-center justify-center bg-jora-navy/70 p-4" onClick={(event) => { if (event.target === event.currentTarget) setOrder(null) }}>
@@ -52,11 +97,18 @@ export default function OrderButton({ product, items, children, ...props }) {
             <button type="button" onClick={() => setOrder(null)} aria-label="Close order sharing" className="rounded-full border border-jora-charcoal/15 px-3 py-2">✕</button>
           </div>
           <p className="mt-2 text-sm text-jora-charcoal/60">JORA Collection · {SITE.phoneDisplay}</p>
-          <a href={waLink(order.message)} className="mt-6 flex w-full items-center justify-center gap-3 rounded-2xl bg-[#128c4a] px-5 py-5 text-center text-base font-semibold text-white shadow-lg shadow-[#128c4a]/20 transition hover:bg-[#0e703b] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#128c4a]">
+          <button type="button" onClick={openChat} disabled={loading || copying || !files.length || !canCopy} className="mt-6 flex w-full items-center justify-center gap-3 rounded-2xl bg-[#128c4a] px-5 py-5 text-center text-base font-semibold text-white shadow-lg shadow-[#128c4a]/20 transition hover:bg-[#0e703b] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#128c4a] disabled:cursor-not-allowed disabled:opacity-50">
             <WhatsAppIcon className="h-6 w-6 shrink-0" />
-            Open JORA chat with order details
-          </a>
-          <p className="mt-3 text-center text-xs leading-relaxed text-jora-charcoal/60">Your order details and bag links will be ready to send in WhatsApp.</p>
+            {loading ? 'Preparing bag images…' : copying ? 'Copying images & opening chat…' : 'Open JORA chat with order details'}
+          </button>
+          <p className="mt-3 text-center text-xs leading-relaxed text-jora-charcoal/60">Your bag images copy automatically. In WhatsApp, paste the image and send it with your prefilled order text. Multiple bags are combined into one image.</p>
+          <div className="mt-5 border-t border-jora-charcoal/10 pt-4">
+            <div className="no-scrollbar flex gap-3 overflow-x-auto pb-2">
+              {order.images.map((image) => <img key={image.filename} src={image.url} alt={image.label} className="h-24 w-20 shrink-0 rounded-xl border border-jora-charcoal/10 object-cover" />)}
+            </div>
+            <p role="status" className="mt-2 text-center text-xs leading-relaxed text-jora-charcoal/60">{!canCopy ? 'This browser cannot copy images. Open the site in a supported browser over HTTPS to copy your bag images.' : status}</p>
+            <a href={waLink(order.message)} className="mt-3 block text-center text-xs text-jora-charcoal/60 underline underline-offset-4">Continue with order text only</a>
+          </div>
           <details className="mt-5 rounded-xl bg-jora-soft p-4">
             <summary className="cursor-pointer text-sm font-medium">Review order details</summary>
             <pre className="mt-3 max-h-52 overflow-y-auto whitespace-pre-wrap font-sans text-sm">{order.message}</pre>

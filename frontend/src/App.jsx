@@ -1,3 +1,4 @@
+import { CartActionsContext } from './context/CartActionsContext'
 import MobileTabs from './components/organisms/MobileTabs'
 import { useCallback, useEffect, useState } from 'react'
 import CartDrawer from './components/organisms/CartDrawer'
@@ -200,69 +201,71 @@ export default function App() {
   const closeCart = useCallback(() => setCartOpen(false), [])
 
   return (
-    <StorefrontLayout
-      routeKey={`${page}-${product?.id ?? 'page'}`}
-      header={
-        <Header
+    <CartActionsContext.Provider value={addToCart}>
+      <StorefrontLayout
+        routeKey={`${page}-${product?.id ?? 'page'}`}
+        header={
+          <Header
+            page={page}
+            onNavigate={navigate}
+            cartCount={cart.count}
+            onOpenCart={openCart}
+            onSearch={(query) => { navigate('shop'); setSearchQuery(query) }}
+          />
+        }
+        footer={
+          <Footer
+            onNavigate={navigate}
+            onShopCategory={shopCategory}
+            onOpenPrivacy={openPrivacy}
+          />
+        }
+        navigation={<MobileTabs page={page} onNavigate={navigate} />}
+        overlays={
+          <>
+            {cartOpen && (
+              <CartDrawer
+                items={cart.items}
+                count={cart.count}
+                subtotal={cart.subtotal}
+                onClose={closeCart}
+                onUpdateQuantity={cart.updateQuantity}
+                onRemove={cart.remove}
+                onClear={cart.clear}
+                onNavigate={navigate}
+              />
+            )}
+            {toast && (
+              <Toast
+                message={toast.message}
+                onViewCart={openCart}
+                onDismiss={() => setToast(null)}
+              />
+            )}
+            {quizOpen && <Quiz onClose={closeQuiz} onNavigate={navigate} />}
+            <PrivacyPopup
+              open={privacyOpen}
+              onAccept={acknowledgePrivacy}
+              onReadPolicy={readPrivacy}
+            />
+          </>
+        }
+      >
+        <Page
           page={page}
-          onNavigate={navigate}
-          cartCount={cart.count}
-          onOpenCart={openCart}
-          onSearch={(query) => { navigate('shop'); setSearchQuery(query) }}
-        />
-      }
-      footer={
-        <Footer
+          product={product}
+          category={category}
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
           onNavigate={navigate}
           onShopCategory={shopCategory}
+          onCategoryChange={setCategory}
+          onOpenQuiz={() => setQuizOpen(true)}
+          onAddToCart={addToCart}
+          onOpenCart={openCart}
           onOpenPrivacy={openPrivacy}
         />
-      }
-      navigation={<MobileTabs page={page} onNavigate={navigate} />}
-      overlays={
-        <>
-          {cartOpen && (
-            <CartDrawer
-              items={cart.items}
-              count={cart.count}
-              subtotal={cart.subtotal}
-              onClose={closeCart}
-              onUpdateQuantity={cart.updateQuantity}
-              onRemove={cart.remove}
-              onClear={cart.clear}
-              onNavigate={navigate}
-            />
-          )}
-          {toast && (
-            <Toast
-              message={toast.message}
-              onViewCart={openCart}
-              onDismiss={() => setToast(null)}
-            />
-          )}
-          {quizOpen && <Quiz onClose={closeQuiz} onNavigate={navigate} />}
-          <PrivacyPopup
-            open={privacyOpen}
-            onAccept={acknowledgePrivacy}
-            onReadPolicy={readPrivacy}
-          />
-        </>
-      }
-    >
-      <Page
-        page={page}
-        product={product}
-        category={category}
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        onNavigate={navigate}
-        onShopCategory={shopCategory}
-        onCategoryChange={setCategory}
-        onOpenQuiz={() => setQuizOpen(true)}
-        onAddToCart={addToCart}
-        onOpenCart={openCart}
-        onOpenPrivacy={openPrivacy}
-      />
-    </StorefrontLayout>
+      </StorefrontLayout>
+    </CartActionsContext.Provider>
   )
 }

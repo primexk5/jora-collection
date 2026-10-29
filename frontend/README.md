@@ -20,7 +20,7 @@ The canonical origin is `https://jora-collection.vercel.app`, configured in `src
 
 ## WhatsApp orders
 
-The order popup has one green action linking directly to `https://wa.me/2347063374333?text=...`, with the message encoded using `encodeURIComponent`. Each item includes its name, colour, style, size, quantity, prices and its own product URL line. Subtotal and item count follow. No clipboard, sharing menu, downloads or attachments are involved.
+The order popup has one green action linking directly to `https://wa.me/2347063374333?text=...`, with the message encoded using `encodeURIComponent`. Each item includes its name, colour, style, size, quantity, prices and its own product URL line. Subtotal and item count follow. The green action copies the selected bag images to the clipboard before opening the chat with prefilled text. Customers paste the image in WhatsApp; multiple bags are combined into one labelled PNG. Clipboard access requires a supported browser and HTTPS. A text-only link remains available if image copying is unsupported or blocked. There is no share menu or download step.
 
 WhatsApp decides whether to display link previews and how many cards to show. A separate line for each URL does not guarantee a separate preview card. The customer must still send the prefilled message.
 
@@ -29,7 +29,7 @@ WhatsApp decides whether to display link previews and how many cards to show. A 
 1. Open a product URL directly on the live domain and refresh it; confirm the correct product loads.
 2. Add two different bags with different quantities and colours, then open the order popup.
 3. Expand **Review order details** and confirm both products, selections, prices, URLs and subtotal.
-4. Tap **Open JORA chat with order details** on a phone with WhatsApp installed. Confirm the destination is JORA Collection, **0706 337 4333**, and the order text is prefilled without any clipboard or file prompts.
+4. Tap **Open JORA chat with order details** on a phone with WhatsApp installed. Confirm the destination is JORA Collection, **0706 337 4333**, and the order text is prefilled after the bag images copy (the browser may ask for clipboard permission). Paste the image in WhatsApp and confirm it contains the selected bags.
 5. Allow time for WhatsApp to load a preview; test each product URL individually as well as the multi-item order. Confirm the image, name and price match. Previews must be enabled in WhatsApp's privacy settings. Record the phone OS and WhatsApp version and which cards the app actually displays.
 
 The automated checks validate generated HTML, actual JPEG dimensions and sizes, routing, item details, totals and the encoded WhatsApp destination. They do not simulate WhatsApp or confirm device previews.
@@ -45,6 +45,7 @@ src/
     organisms/           Navigation, product displays and order flows
     templates/           Shared page layout and content slots
   pages/                 Route-specific page compositions
+  context/               Shared cart actions for product cards
   hooks/                 Shared React state and effects
   data/                  Product catalogue and site content
   lib/                   Routing, search and order logic
