@@ -20,18 +20,17 @@ test('every product produces a complete order and a direct JORA WhatsApp link', 
     assert.ok(lines.includes('Quantity: 2'))
     assert.ok(lines.includes(`Unit price: ${formatNaira(priceFor(product, size.label))}`))
     assert.ok(lines.includes(`*Subtotal: ${formatNaira(priceFor(product, size.label) * 2)}*`))
-    assert.ok(lines.includes(`https://jora-collection.vercel.app/product/${product.id}`))
+    assert.doesNotMatch(message, /https?:\/\//)
     const link = waLink(message)
     assert.equal(link, `https://wa.me/2347063374333?text=${encodeURIComponent(message)}`)
     assert.equal(new URL(link).searchParams.get('text'), message)
   }
 })
 
-test('multi-item order keeps each URL on its own line and calculates subtotal', () => {
+test('multi-item order contains no links and calculates subtotal', () => {
   const items = PRODUCTS.slice(0, 3).map((product, index) => ({ productId: product.id, color: product.palette, size: defaultSize(product).label, quantity: index + 1 }))
   const message = cartMessage(items)
-  const urls = message.split('\n').filter((line) => line.startsWith('https://'))
-  assert.deepEqual(urls, PRODUCTS.slice(0, 3).map((product) => productPageUrl(product.id)))
+  assert.doesNotMatch(message, /https?:\/\//)
   const subtotal = items.reduce((sum, item, index) => sum + priceFor(PRODUCTS[index], item.size) * item.quantity, 0)
   assert.ok(message.includes(`*Subtotal: ${formatNaira(subtotal)}*`))
   assert.ok(message.includes('Total items: 6'))

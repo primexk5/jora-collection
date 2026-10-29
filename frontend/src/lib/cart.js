@@ -36,7 +36,6 @@ export function cartMessage(items) {
     lines.push(`Quantity: ${item.quantity}`)
     lines.push(`Unit price: ${formatNaira(unitPrice)}`)
     lines.push(`*Item total: ${formatNaira(unitPrice * item.quantity)}*`)
-    lines.push(productPageUrl(product.id))
     lines.push('')
   })
 

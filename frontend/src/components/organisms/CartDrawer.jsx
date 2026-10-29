@@ -204,7 +204,7 @@ export default function CartDrawer({
             </div>
 
             <p className="mt-3 text-[9px] leading-relaxed text-jora-charcoal/35">
-              Your WhatsApp message includes bag details and a link to each product. Your bag is saved on this device.
+              Your WhatsApp message includes bag details, quantities and prices. Your bag is saved on this device.
             </p>
           </div>
         )}
