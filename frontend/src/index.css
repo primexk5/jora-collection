@@ -324,3 +324,50 @@ textarea {
     transform: none;
   }
 }
+
+/* Mobile has its own storefront rhythm and touch browsing patterns. */
+@media (max-width: 767px) {
+  .home-page > section.py-16 {
+    padding-block: 2.5rem;
+  }
+
+  .home-categories > button > div:first-child {
+    max-width: 130px;
+  }
+
+  .home-testimonials,
+  .home-lookbook,
+  .product-mobile-rail {
+    grid-auto-flow: column;
+    grid-auto-columns: 82%;
+    grid-template-columns: none;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 1.25rem;
+    margin-inline: -1.25rem;
+    padding: 0.25rem 1.25rem 1rem;
+  }
+
+  .product-mobile-rail {
+    grid-auto-columns: 70%;
+  }
+
+  .home-testimonials > *,
+  .home-lookbook > *,
+  .product-mobile-rail > * {
+    min-width: 0;
+    scroll-snap-align: start;
+  }
+}
+
+@media (hover: none) {
+  .product-order-action {
+    transform: none;
+    opacity: 1;
+  }
+
+  .art-grayscale {
+    filter: none;
+  }
+}

@@ -43,9 +43,9 @@ export default function ProductCard({ product, delay = 0 }) {
             <span className="absolute right-4 top-4 grid h-2.5 w-2.5 place-items-center rounded-full bg-jora-red" />
           </div>
         </a>
-        <div className="pointer-events-none absolute inset-x-4 bottom-4 z-10 translate-y-3 opacity-0 transition-all duration-400 group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:translate-y-0 group-focus-within:opacity-100">
+        <div className="product-order-action pointer-events-none absolute inset-x-2 bottom-3 z-10 md:inset-x-4 md:bottom-4 translate-y-3 opacity-0 transition-all duration-400 group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:translate-y-0 group-focus-within:opacity-100">
           <OrderButton product={product}
-            className="pointer-events-auto flex items-center justify-center gap-2 rounded-full bg-jora-navy px-4 py-3 text-[10px] font-medium uppercase tracking-[0.16em] text-white transition hover:bg-jora-red"
+            className="pointer-events-auto flex items-center justify-center gap-1 rounded-full bg-jora-navy px-2 py-3 text-[9px] font-medium uppercase tracking-[0.04em] md:gap-2 md:px-4 md:text-[10px] md:tracking-[0.16em] text-white transition hover:bg-jora-red"
           >
             <WhatsAppIcon className="h-4 w-4" />
             Order on WhatsApp
@@ -53,12 +53,12 @@ export default function ProductCard({ product, delay = 0 }) {
         </div>
       </div>
 
-      <div className="mt-4 flex flex-1 items-start justify-between gap-3">
+      <div className="mt-3 flex flex-1 flex-col items-start justify-between gap-2 md:mt-4 md:flex-row md:gap-3">
         <div>
           <p className="text-[9px] font-medium uppercase tracking-[0.24em] text-jora-charcoal/40">
             {category?.label ?? product.category}
           </p>
-          <h3 className="mt-1 font-display text-lg leading-snug text-jora-charcoal">
+          <h3 className="mt-1 font-display text-base leading-snug md:text-lg text-jora-charcoal">
             <a href={`#bag/${product.id}`} className="transition hover:text-jora-red">
               {product.name}
             </a>

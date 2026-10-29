@@ -23,7 +23,7 @@ export default function Header({ page, onNavigate, cartCount = 0, onOpenCart }) 
   return (
     <>
       <div className="bg-jora-navy text-white">
-        <div className="shell flex h-9 items-center justify-between gap-4">
+        <div className="shell flex h-8 items-center justify-center sm:h-9 sm:justify-between gap-4">
           <p className="truncate text-[10px] uppercase tracking-[0.18em] text-white/75 sm:text-[11px]">
             {SITE.freeDeliveryNote}
           </p>
@@ -38,7 +38,7 @@ export default function Header({ page, onNavigate, cartCount = 0, onOpenCart }) 
       </div>
 
       <header className="sticky top-0 z-40 border-b border-jora-charcoal/10 bg-jora-soft/90 backdrop-blur-xl">
-        <div className="shell flex h-[74px] items-center justify-between gap-6">
+        <div className="shell flex h-16 items-center justify-between gap-3 md:h-[74px] md:gap-6">
           <a
             href="#home"
             onClick={(event) => {

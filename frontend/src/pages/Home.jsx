@@ -1,3 +1,4 @@
+import MobileHomeHero from '../components/MobileHomeHero'
 import BagArt from '../components/BagArt'
 import Countdown from '../components/Countdown'
 import CurveDivider from '../components/CurveDivider'
@@ -20,8 +21,9 @@ const MARQUEE_ITEMS = [
 
 export default function Home({ onNavigate, onShopCategory, onOpenQuiz }) {
   return (
-    <div>
-      <section className="relative overflow-hidden bg-jora-soft">
+    <div className="home-page">
+      <MobileHomeHero onNavigate={onNavigate} onShopCategory={onShopCategory} />
+      <section className="relative hidden overflow-hidden bg-jora-soft md:block">
         <svg
           viewBox="0 0 120 180"
           aria-hidden="true"
@@ -140,7 +142,7 @@ export default function Home({ onNavigate, onShopCategory, onOpenQuiz }) {
         </div>
       </section>
 
-      <section className="marquee overflow-hidden border-y border-white/10 bg-jora-navy py-4 text-white">
+      <section className="marquee hidden overflow-hidden md:block border-y border-white/10 bg-jora-navy py-4 text-white">
         <div className="marquee-track flex w-max">
           {[0, 1].map((group) => (
             <div
@@ -184,13 +186,13 @@ export default function Home({ onNavigate, onShopCategory, onOpenQuiz }) {
             </button>
           </div>
 
-          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="home-categories mt-6 grid grid-cols-2 gap-3 md:mt-10 md:gap-5 lg:grid-cols-3">
             {CATEGORIES.map((category, index) => (
               <button
                 key={category.id}
                 type="button"
                 onClick={() => onShopCategory(category.id)}
-                className="group reveal relative overflow-hidden rounded-[1.75rem] border border-jora-charcoal/8 bg-white p-5 text-left transition duration-500 hover:-translate-y-1 hover:border-jora-red/40"
+                className="group reveal relative overflow-hidden rounded-[1.75rem] border border-jora-charcoal/8 bg-white p-3 text-left transition duration-500 md:p-5 hover:-translate-y-1 hover:border-jora-red/40"
                 style={{ transitionDelay: `${(index % 3) * 90}ms` }}
               >
                 <div className="relative mx-auto aspect-square w-full max-w-[190px]">
@@ -202,10 +204,10 @@ export default function Home({ onNavigate, onShopCategory, onOpenQuiz }) {
                     className="art-grayscale art-sway relative h-full w-full p-1"
                   />
                 </div>
-                <div className="mt-5 flex items-end justify-between gap-4">
+                <div className="mt-3 flex items-end justify-between gap-2 md:mt-5 md:gap-4">
                   <div>
-                    <h3 className="font-display text-xl text-jora-charcoal">{category.label}</h3>
-                    <p className="mt-1 max-w-[15rem] text-xs leading-relaxed text-jora-charcoal/50">
+                    <h3 className="font-display text-base text-jora-charcoal md:text-xl">{category.label}</h3>
+                    <p className="mt-1 hidden max-w-[15rem] text-xs leading-relaxed text-jora-charcoal/50 md:block">
                       {category.note}
                     </p>
                   </div>
@@ -238,7 +240,7 @@ export default function Home({ onNavigate, onShopCategory, onOpenQuiz }) {
           </div>
 
           <div className="mt-10">
-            <ProductGrid products={NEW_ARRIVALS.slice(0, 4)} />
+            <ProductGrid products={NEW_ARRIVALS.slice(0, 4)} mobileRail />
           </div>
         </div>
       </section>
@@ -276,7 +278,7 @@ export default function Home({ onNavigate, onShopCategory, onOpenQuiz }) {
             </div>
           </div>
 
-          <div className="reveal relative mx-auto w-full max-w-sm">
+          <div className="reveal relative mx-auto hidden w-full max-w-sm md:block">
             <div className="absolute -inset-3 rotate-3 rounded-[2rem] border border-white/10" />
             <div className="relative -rotate-2 rounded-[1.75rem] bg-jora-soft p-5 text-jora-charcoal">
               <div className="flex items-center justify-between">
@@ -334,7 +336,7 @@ export default function Home({ onNavigate, onShopCategory, onOpenQuiz }) {
             align="center"
           />
 
-          <div className="mt-12 grid gap-5 md:grid-cols-3">
+          <div className="home-testimonials mt-6 grid gap-4 md:mt-12 md:grid-cols-3 md:gap-5">
             {TESTIMONIALS.map((testimonial, index) => (
               <figure
                 key={testimonial.name}
@@ -384,7 +386,7 @@ export default function Home({ onNavigate, onShopCategory, onOpenQuiz }) {
             </button>
           </div>
 
-          <div className="mt-10 grid gap-4 sm:grid-cols-3">
+          <div className="home-lookbook mt-6 grid gap-4 md:mt-10 md:grid-cols-3">
             {[
               {
                 label: 'Look 01 — Work',
