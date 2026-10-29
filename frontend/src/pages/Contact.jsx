@@ -62,14 +62,18 @@ export default function Contact() {
   const submit = (event) => {
     event.preventDefault()
     const lines = [
-      `Hi JORA Collection, my name is ${form.name}.`,
-      form.bag.startsWith('Not sure')
-        ? 'I would like help choosing a bag.'
-        : `I would like to order the ${form.bag}.`,
-      form.note ? `Note: ${form.note}` : '',
-      `My phone number is ${form.phone}.`,
-    ].filter(Boolean)
-    window.open(waLink(lines.join(' ')), '_blank', 'noopener,noreferrer')
+      '👜 *JORA COLLECTION | ENQUIRY*',
+      '',
+      `*Name:* ${form.name}`,
+      `*Phone:* ${form.phone}`,
+      '',
+      '*Bag preference*',
+      form.bag.startsWith('Not sure') ? 'I would like help choosing a bag.' : form.bag,
+      ...(form.note.trim() ? ['', '*My message*', form.note.trim()] : []),
+      '',
+      'Please confirm availability and delivery details. Thank you!',
+    ]
+    window.open(waLink(lines.join('\n')), '_blank', 'noopener,noreferrer')
   }
 
   return (

@@ -1,3 +1,4 @@
+import OrderButton from '../components/OrderButton'
 import BagArt from '../components/BagArt'
 import Countdown from '../components/Countdown'
 import CurveDivider from '../components/CurveDivider'
@@ -5,7 +6,7 @@ import { ArrowIcon, SparkIcon, WhatsAppIcon } from '../components/Icons'
 import ProductGrid from '../components/ProductGrid'
 import SectionHeading from '../components/SectionHeading'
 import { NEW_ARRIVALS } from '../data/products'
-import { GENERAL_ORDER_LINK, formatNaira, orderLink } from '../lib/site'
+import { GENERAL_ORDER_LINK, formatNaira } from '../lib/site'
 
 export default function NewArrivals() {
   const heroProduct = NEW_ARRIVALS[0]
@@ -37,16 +38,13 @@ export default function NewArrivals() {
             </div>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <a
-                href={orderLink(heroProduct)}
-                target="_blank"
-                rel="noreferrer"
+              <OrderButton product={heroProduct}
                 className="btn-sweep inline-flex items-center justify-center gap-2 rounded-full bg-jora-red px-6 py-3.5 text-[11px] font-medium uppercase tracking-[0.16em] text-white"
                 style={{ '--sweep-bg': '#c9a66b' }}
               >
                 <WhatsAppIcon className="h-4 w-4" />
                 Order the new drop
-              </a>
+              </OrderButton>
               <a
                 href={GENERAL_ORDER_LINK}
                 target="_blank"

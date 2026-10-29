@@ -1,6 +1,7 @@
+import OrderButton from './OrderButton'
 import { useEffect, useRef, useState } from 'react'
 import { PRODUCTS } from '../data/products'
-import { formatNaira, orderLink } from '../lib/site'
+import { formatNaira } from '../lib/site'
 import BagArt from './BagArt'
 import { ArrowIcon, CloseIcon, SparkIcon, WhatsAppIcon } from './Icons'
 
@@ -221,16 +222,13 @@ export default function Quiz({ onClose, onNavigate }) {
                   spirit. Ask us about gift wrapping and delivery.
                 </p>
                 <div className="mt-6 flex flex-wrap gap-3">
-                  <a
-                    href={orderLink(result)}
-                    target="_blank"
-                    rel="noreferrer"
+                  <OrderButton product={result}
                     className="btn-sweep inline-flex items-center gap-2 rounded-full bg-jora-red px-5 py-3 text-[10px] font-medium uppercase tracking-[0.16em] text-white"
                     style={{ '--sweep-bg': '#1b2233' }}
                   >
                     <WhatsAppIcon className="h-4 w-4" />
                     Order this bag
-                  </a>
+                  </OrderButton>
                   <button
                     type="button"
                     onClick={() => {

@@ -1,3 +1,4 @@
+import OrderButton from '../components/OrderButton'
 import { useMemo, useState } from 'react'
 import {
   CATEGORIES,
@@ -11,8 +12,7 @@ import {
   getSpecs,
   priceFor,
 } from '../data/products'
-import { singleItemMessage } from '../lib/cart'
-import { formatNaira, waLink } from '../lib/site'
+import { formatNaira } from '../lib/site'
 import BagArt from '../components/BagArt'
 import ProductGrid from '../components/ProductGrid'
 import QuantityStepper from '../components/QuantityStepper'
@@ -252,16 +252,13 @@ export default function ProductDetail({ product, onAddToCart, onOpenCart, onNavi
                 Add to bag
                 <ArrowIcon className="h-4 w-4" />
               </button>
-              <a
-                href={waLink(singleItemMessage(product, selectedColor, selectedSize, quantity))}
-                target="_blank"
-                rel="noreferrer"
+              <OrderButton items={[{ product, color: selectedColor, size: selectedSize, quantity }]}
                 className="btn-sweep inline-flex items-center justify-center gap-2 rounded-full border border-jora-red px-6 py-4 text-[11px] font-medium uppercase tracking-[0.16em] text-jora-red"
                 style={{ '--sweep-bg': '#e8185a' }}
               >
                 <WhatsAppIcon className="h-4 w-4" />
                 Order this bag
-              </a>
+              </OrderButton>
             </div>
 
             <button

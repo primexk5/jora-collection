@@ -1,5 +1,6 @@
+import OrderButton from './OrderButton'
 import { CATEGORIES } from '../data/products'
-import { formatNaira, orderLink } from '../lib/site'
+import { formatNaira } from '../lib/site'
 import BagArt from './BagArt'
 import { ArrowIcon, WhatsAppIcon } from './Icons'
 
@@ -43,15 +44,12 @@ export default function ProductCard({ product, delay = 0 }) {
           </div>
         </a>
         <div className="pointer-events-none absolute inset-x-4 bottom-4 z-10 translate-y-3 opacity-0 transition-all duration-400 group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:translate-y-0 group-focus-within:opacity-100">
-          <a
-            href={orderLink(product)}
-            target="_blank"
-            rel="noreferrer"
+          <OrderButton product={product}
             className="pointer-events-auto flex items-center justify-center gap-2 rounded-full bg-jora-navy px-4 py-3 text-[10px] font-medium uppercase tracking-[0.16em] text-white transition hover:bg-jora-red"
           >
             <WhatsAppIcon className="h-4 w-4" />
             Order on WhatsApp
-          </a>
+          </OrderButton>
         </div>
       </div>
 

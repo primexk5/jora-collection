@@ -1,7 +1,7 @@
+import OrderButton from './OrderButton'
 import { useEffect, useRef } from 'react'
 import { CATEGORIES } from '../data/products'
-import { cartMessage } from '../lib/cart'
-import { formatNaira, waLink } from '../lib/site'
+import { formatNaira } from '../lib/site'
 import BagArt from './BagArt'
 import { ArrowIcon, BagIcon, CloseIcon, TrashIcon, WhatsAppIcon } from './Icons'
 import QuantityStepper from './QuantityStepper'
@@ -177,16 +177,13 @@ export default function CartDrawer({
               <p className="font-display text-2xl text-jora-charcoal">{formatNaira(subtotal)}</p>
             </div>
 
-            <a
-              href={waLink(cartMessage(items))}
-              target="_blank"
-              rel="noreferrer"
+            <OrderButton items={items}
               className="btn-sweep mt-4 flex items-center justify-center gap-2 rounded-full bg-jora-red px-5 py-4 text-[11px] font-medium uppercase tracking-[0.14em] text-white"
               style={{ '--sweep-bg': '#1b2233' }}
             >
               <WhatsAppIcon className="h-4 w-4" />
               Order {count} {count === 1 ? 'bag' : 'bags'} on WhatsApp
-            </a>
+            </OrderButton>
 
             <div className="mt-3 flex items-center justify-between">
               <button
@@ -206,8 +203,7 @@ export default function CartDrawer({
             </div>
 
             <p className="mt-3 text-[9px] leading-relaxed text-jora-charcoal/35">
-              Photos, colours, sizes and quantities are included as links in your WhatsApp
-              message. Your bag is saved on this device.
+              Share actual bag images with your order details, or download them to attach in WhatsApp. Your bag is saved on this device.
             </p>
           </div>
         )}

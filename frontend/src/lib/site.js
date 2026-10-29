@@ -37,7 +37,7 @@ export function formatNaira(value) {
 }
 
 export function orderMessage(product) {
-  return `Hi JORA Collection, I'd like to order the ${product.name} (${formatNaira(product.price)}). Is it available?`
+  return ['🛍️ *JORA COLLECTION | ORDER REQUEST*', '', `*${product.name}*`, `Price: ${formatNaira(product.price)}`, '', 'Please confirm availability, delivery and payment details. Thank you!'].join('\n')
 }
 
 export function orderLink(product) {

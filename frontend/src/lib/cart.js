@@ -14,7 +14,7 @@ export function productPageUrl(productId) {
   return `${siteRoot()}#bag/${productId}`
 }
 
-function resolveItem(item) {
+export function resolveItem(item) {
   const product = item.product ?? getProduct(item.productId)
   if (!product) return null
   const color = typeof item.color === 'string' ? getColor(product, item.color) : item.color
@@ -24,7 +24,7 @@ function resolveItem(item) {
 }
 
 export function cartMessage(items) {
-  const lines = ["Hi JORA Collection, I'd like to order the following:", '']
+  const lines = ["🛍️ *JORA COLLECTION | ORDER REQUEST*", "", "Hello! I would love to order these bags:", ""]
   let totalQuantity = 0
   let subtotal = 0
 
@@ -34,40 +34,22 @@ export function cartMessage(items) {
     const { product, color, size, unitPrice } = resolved
     totalQuantity += item.quantity
     subtotal += unitPrice * item.quantity
-    lines.push(`${index + 1}. ${product.name}`)
-    lines.push(`   Colour: ${color.name}`)
-    lines.push(`   Size: ${size.label} (${size.dimensions})`)
-    lines.push(`   Quantity: ${item.quantity}`)
-    lines.push(`   Unit price: ${formatNaira(unitPrice)}`)
-    lines.push(`   Line total: ${formatNaira(unitPrice * item.quantity)}`)
-    lines.push(`   Photo: ${productImageUrl(product.id, color.id)}`)
-    lines.push(`   Link: ${productPageUrl(product.id)}`)
+    lines.push(`*${index + 1}. ${product.name}*`)
+    lines.push(`Colour: ${color.name}`)
+    lines.push(`Size: ${size.label} (${size.dimensions})`)
+    lines.push(`Quantity: ${item.quantity}`)
+    lines.push(`Unit price: ${formatNaira(unitPrice)}`)
+    lines.push(`*Item total: ${formatNaira(unitPrice * item.quantity)}*`)
     lines.push('')
   })
 
   lines.push(`Total items: ${totalQuantity}`)
-  lines.push(`Subtotal: ${formatNaira(subtotal)}`)
+  lines.push(`*Subtotal: ${formatNaira(subtotal)}*`)
   lines.push('')
   lines.push('Please confirm availability, delivery and payment details. Thank you!')
   return lines.join('\n')
 }
 
 export function singleItemMessage(product, colorId, sizeLabel, quantity) {
-  const color = getColor(product, colorId)
-  const size = getSize(product, sizeLabel)
-  const unitPrice = priceFor(product, sizeLabel)
-
-  return [
-    `Hi JORA Collection, I'd like to order the ${product.name}.`,
-    '',
-    `Colour: ${color.name}`,
-    `Size: ${size.label} (${size.dimensions})`,
-    `Quantity: ${quantity}`,
-    `Unit price: ${formatNaira(unitPrice)}`,
-    `Total: ${formatNaira(unitPrice * quantity)}`,
-    `Photo: ${productImageUrl(product.id, color.id)}`,
-    `Link: ${productPageUrl(product.id)}`,
-    '',
-    'Please confirm availability, delivery and payment details. Thank you!',
-  ].join('\n')
+  return cartMessage([{ product, color: colorId, size: sizeLabel, quantity }])
 }

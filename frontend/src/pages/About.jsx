@@ -1,9 +1,10 @@
+import OrderButton from '../components/OrderButton'
 import BagArt from '../components/BagArt'
 import CurveDivider from '../components/CurveDivider'
 import { ArrowIcon, GiftIcon, SparkIcon, WhatsAppIcon } from '../components/Icons'
 import SectionHeading from '../components/SectionHeading'
 import { FEATURED, VALUES } from '../data/products'
-import { GENERAL_ORDER_LINK, SITE, orderLink } from '../lib/site'
+import { GENERAL_ORDER_LINK, SITE } from '../lib/site'
 
 const STEPS = [
   {
@@ -83,15 +84,12 @@ export default function About({ onNavigate }) {
               </p>
               <p className="mt-1 font-display text-sm">Abuja, Nigeria</p>
             </div>
-            <a
-              href={orderLink(FEATURED)}
-              target="_blank"
-              rel="noreferrer"
+            <OrderButton product={FEATURED}
               className="absolute -bottom-2 right-0 flex items-center gap-2 rounded-full bg-jora-navy px-4 py-3 text-white transition hover:bg-jora-red"
             >
               <SparkIcon className="h-4 w-4 text-jora-gold" />
               <span className="text-[10px] uppercase tracking-[0.16em]">{FEATURED.name}</span>
-            </a>
+            </OrderButton>
           </div>
         </div>
       </section>
