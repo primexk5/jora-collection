@@ -1,8 +1,9 @@
+import { productPath } from '../../lib/cart'
 import OrderButton from './OrderButton'
-import { CATEGORIES } from '../data/products'
-import { formatNaira } from '../lib/site'
-import BagArt from './BagArt'
-import { ArrowIcon, WhatsAppIcon } from './Icons'
+import { CATEGORIES } from '../../data/products'
+import { formatNaira } from '../../lib/site'
+import BagArt from '../atoms/BagArt'
+import { ArrowIcon, WhatsAppIcon } from '../atoms/Icons'
 
 const BADGE_STYLES = {
   New: 'bg-jora-red text-white',
@@ -19,7 +20,7 @@ export default function ProductCard({ product, delay = 0 }) {
     >
       <div className="relative overflow-hidden rounded-[1.75rem] border border-jora-charcoal/5 bg-white">
         <a
-          href={`#bag/${product.id}`}
+          href={productPath(product.id)}
           aria-label={`View ${product.name}`}
           className="block"
         >
@@ -59,12 +60,12 @@ export default function ProductCard({ product, delay = 0 }) {
             {category?.label ?? product.category}
           </p>
           <h3 className="mt-1 font-display text-base leading-snug md:text-lg text-jora-charcoal">
-            <a href={`#bag/${product.id}`} className="transition hover:text-jora-red">
+            <a href={productPath(product.id)} className="transition hover:text-jora-red">
               {product.name}
             </a>
           </h3>
           <a
-            href={`#bag/${product.id}`}
+            href={productPath(product.id)}
             className="mt-2 inline-flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-[0.14em] text-jora-red transition hover:text-jora-navy"
           >
             View details

@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { CloseIcon, ShieldIcon } from './Icons'
+import { CloseIcon, ShieldIcon } from '../atoms/Icons'
 
 export const PRIVACY_ACK_KEY = 'jora-privacy-ack-v1'
 

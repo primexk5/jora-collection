@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import CurveDivider from '../components/CurveDivider'
-import CustomSelect from '../components/CustomSelect'
+import CurveDivider from '../components/atoms/CurveDivider'
+import CustomSelect from '../components/molecules/CustomSelect'
 import {
   ArrowIcon,
   ClockIcon,
@@ -10,8 +10,8 @@ import {
   SocialIcon,
   SparkIcon,
   WhatsAppIcon,
-} from '../components/Icons'
-import SectionHeading from '../components/SectionHeading'
+} from '../components/atoms/Icons'
+import SectionHeading from '../components/molecules/SectionHeading'
 import { PRODUCTS } from '../data/products'
 import { SITE, formatNaira, waLink } from '../lib/site'
 

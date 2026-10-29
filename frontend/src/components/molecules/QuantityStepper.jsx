@@ -1,4 +1,4 @@
-import { MinusIcon, PlusIcon } from './Icons'
+import { MinusIcon, PlusIcon } from '../atoms/Icons'
 
 export default function QuantityStepper({
   value,

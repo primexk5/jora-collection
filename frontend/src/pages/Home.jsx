@@ -1,16 +1,17 @@
-import MobileHomeHero from '../components/MobileHomeHero'
-import BagArt from '../components/BagArt'
-import Countdown from '../components/Countdown'
-import CurveDivider from '../components/CurveDivider'
+import { productPath } from '../lib/cart'
+import MobileHomeHero from '../components/organisms/MobileHomeHero'
+import BagArt from '../components/atoms/BagArt'
+import Countdown from '../components/molecules/Countdown'
+import CurveDivider from '../components/atoms/CurveDivider'
 import {
   ArrowIcon,
   ClockIcon,
   GiftIcon,
   SparkIcon,
   WhatsAppIcon,
-} from '../components/Icons'
-import ProductGrid from '../components/ProductGrid'
-import SectionHeading from '../components/SectionHeading'
+} from '../components/atoms/Icons'
+import ProductGrid from '../components/organisms/ProductGrid'
+import SectionHeading from '../components/molecules/SectionHeading'
 import { CATEGORIES, FEATURED, NEW_ARRIVALS, TESTIMONIALS, VALUES } from '../data/products'
 import { GENERAL_ORDER_LINK, SITE, formatNaira } from '../lib/site'
 
@@ -113,7 +114,7 @@ export default function Home({ onNavigate, onShopCategory, onOpenQuiz }) {
               />
               <div className="absolute inset-x-0 bottom-2 flex justify-center">
                 <a
-                  href={`#bag/${FEATURED.id}`}
+                  href={productPath(FEATURED.id)}
                   className="flex items-center gap-2 rounded-full bg-white/90 px-5 py-3 backdrop-blur transition hover:bg-jora-navy hover:text-white"
                 >
                   <span className="grid h-6 w-6 place-items-center rounded-full bg-jora-red text-white">

@@ -1,8 +1,8 @@
-import OrderButton from '../components/OrderButton'
-import BagArt from '../components/BagArt'
-import CurveDivider from '../components/CurveDivider'
-import { ArrowIcon, GiftIcon, SparkIcon, WhatsAppIcon } from '../components/Icons'
-import SectionHeading from '../components/SectionHeading'
+import OrderButton from '../components/organisms/OrderButton'
+import BagArt from '../components/atoms/BagArt'
+import CurveDivider from '../components/atoms/CurveDivider'
+import { ArrowIcon, GiftIcon, SparkIcon, WhatsAppIcon } from '../components/atoms/Icons'
+import SectionHeading from '../components/molecules/SectionHeading'
 import { FEATURED, VALUES } from '../data/products'
 import { GENERAL_ORDER_LINK, SITE } from '../lib/site'
 

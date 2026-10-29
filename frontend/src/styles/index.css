@@ -371,3 +371,27 @@ textarea {
     filter: none;
   }
 }
+
+@media (max-width: 767px) {
+  :root {
+    --mobile-tabs-height: calc(4.5rem + env(safe-area-inset-bottom, 0px));
+    --mobile-header-height: 7.25rem;
+  }
+
+  html {
+    scroll-padding-top: calc(var(--mobile-header-height) + 1rem);
+    scroll-padding-bottom: calc(var(--mobile-tabs-height) + 1rem);
+  }
+
+  .mobile-tabs {
+    min-height: var(--mobile-tabs-height);
+  }
+
+  .mobile-home-hero {
+    min-height: max(28rem, calc(100svh - var(--mobile-header-height) - var(--mobile-tabs-height)));
+  }
+
+  #root {
+    padding-bottom: var(--mobile-tabs-height);
+  }
+}

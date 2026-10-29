@@ -1,7 +1,7 @@
-import BagArt from '../components/BagArt'
-import CurveDivider from '../components/CurveDivider'
-import { ArrowIcon, SparkIcon, WhatsAppIcon } from '../components/Icons'
-import SectionHeading from '../components/SectionHeading'
+import BagArt from '../components/atoms/BagArt'
+import CurveDivider from '../components/atoms/CurveDivider'
+import { ArrowIcon, SparkIcon, WhatsAppIcon } from '../components/atoms/Icons'
+import SectionHeading from '../components/molecules/SectionHeading'
 import { GENERAL_ORDER_LINK } from '../lib/site'
 
 const LOOKS = [

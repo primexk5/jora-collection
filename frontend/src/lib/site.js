@@ -1,5 +1,6 @@
 export const SITE = {
   name: 'JORA Collection',
+  url: 'https://jora-collection.vercel.app',
   tagline: 'Confidence you carry',
   headline: 'Every bag. Every mood. One confident you.',
   phoneDisplay: '0706 337 4333',

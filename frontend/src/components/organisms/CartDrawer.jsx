@@ -1,10 +1,11 @@
+import { productPath } from '../../lib/cart'
 import OrderButton from './OrderButton'
 import { useEffect, useRef } from 'react'
-import { CATEGORIES } from '../data/products'
-import { formatNaira } from '../lib/site'
-import BagArt from './BagArt'
-import { ArrowIcon, BagIcon, CloseIcon, TrashIcon, WhatsAppIcon } from './Icons'
-import QuantityStepper from './QuantityStepper'
+import { CATEGORIES } from '../../data/products'
+import { formatNaira } from '../../lib/site'
+import BagArt from '../atoms/BagArt'
+import { ArrowIcon, BagIcon, CloseIcon, TrashIcon, WhatsAppIcon } from '../atoms/Icons'
+import QuantityStepper from '../molecules/QuantityStepper'
 
 export default function CartDrawer({
   items,
@@ -106,7 +107,7 @@ export default function CartDrawer({
                 return (
                   <li key={item.key} className="flex gap-3 py-4">
                     <a
-                      href={`#bag/${item.product.id}`}
+                      href={productPath(item.product.id)}
                       onClick={onClose}
                       className="relative h-24 w-20 shrink-0 overflow-hidden rounded-xl border border-jora-charcoal/8 bg-white"
                     >
@@ -124,7 +125,7 @@ export default function CartDrawer({
                             {category?.label ?? item.product.category}
                           </p>
                           <a
-                            href={`#bag/${item.product.id}`}
+                            href={productPath(item.product.id)}
                             onClick={onClose}
                             className="mt-0.5 block truncate font-display text-base text-jora-charcoal transition hover:text-jora-red"
                           >
@@ -203,7 +204,7 @@ export default function CartDrawer({
             </div>
 
             <p className="mt-3 text-[9px] leading-relaxed text-jora-charcoal/35">
-              Share actual bag images with your order details, or download them to attach in WhatsApp. Your bag is saved on this device.
+              Your WhatsApp message includes bag details and a link to each product. Your bag is saved on this device.
             </p>
           </div>
         )}

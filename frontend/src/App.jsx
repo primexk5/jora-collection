@@ -1,14 +1,14 @@
+import MobileTabs from './components/organisms/MobileTabs'
 import { useCallback, useEffect, useState } from 'react'
-import CartDrawer from './components/CartDrawer'
-import Footer from './components/Footer'
-import Header from './components/Header'
-import PrivacyPopup, { PRIVACY_ACK_KEY } from './components/PrivacyPopup'
-import Quiz from './components/Quiz'
-import StickyWhatsApp from './components/StickyWhatsApp'
-import Toast from './components/Toast'
-import { getProduct } from './data/products'
+import CartDrawer from './components/organisms/CartDrawer'
+import Footer from './components/organisms/Footer'
+import Header from './components/organisms/Header'
+import PrivacyPopup, { PRIVACY_ACK_KEY } from './components/organisms/PrivacyPopup'
+import Quiz from './components/organisms/Quiz'
+import StorefrontLayout from './components/templates/StorefrontLayout'
+import Toast from './components/molecules/Toast'
 import useCart from './hooks/useCart'
-import { NAV } from './lib/site'
+import { ROUTE_IDS, routeFromLocation } from './lib/routes'
 import useScrollReveal from './hooks/useScrollReveal'
 import About from './pages/About'
 import Contact from './pages/Contact'
@@ -18,9 +18,6 @@ import NewArrivals from './pages/NewArrivals'
 import Privacy from './pages/Privacy'
 import ProductDetail from './pages/ProductDetail'
 import Shop from './pages/Shop'
-
-const PAGE_IDS = NAV.map((item) => item.id)
-const ROUTE_IDS = [...PAGE_IDS, 'privacy']
 
 const PAGE_TITLES = {
   home: 'JORA Collection — Confidence you carry',
@@ -32,19 +29,12 @@ const PAGE_TITLES = {
   privacy: 'Privacy & Cookies — JORA Collection',
 }
 
-function routeFromHash() {
-  const hash = window.location.hash.replace(/^#/, '')
-  if (hash.startsWith('bag/')) {
-    const product = getProduct(decodeURIComponent(hash.slice(4)))
-    if (product) return { page: 'shop', product }
-  }
-  return { page: ROUTE_IDS.includes(hash) ? hash : 'home', product: null }
-}
-
 function Page({
   page,
   product,
   category,
+  searchQuery,
+  onSearchChange,
   onNavigate,
   onShopCategory,
   onCategoryChange,
@@ -70,6 +60,8 @@ function Page({
       return (
         <Shop
           category={category}
+          searchQuery={searchQuery}
+          onSearchChange={onSearchChange}
           onCategoryChange={onCategoryChange}
           onOpenQuiz={onOpenQuiz}
         />
@@ -96,8 +88,9 @@ function Page({
 }
 
 export default function App() {
-  const [route, setRoute] = useState(routeFromHash)
+  const [route, setRoute] = useState(routeFromLocation)
   const [category, setCategory] = useState('all')
+  const [searchQuery, setSearchQuery] = useState('')
   const [quizOpen, setQuizOpen] = useState(false)
   const [cartOpen, setCartOpen] = useState(false)
   const [privacyOpen, setPrivacyOpen] = useState(false)
@@ -115,11 +108,15 @@ export default function App() {
 
   useEffect(() => {
     const onHashChange = () => {
-      setRoute(routeFromHash())
+      setRoute(routeFromLocation())
       window.scrollTo({ top: 0, behavior: 'auto' })
     }
     window.addEventListener('hashchange', onHashChange)
-    return () => window.removeEventListener('hashchange', onHashChange)
+    window.addEventListener('popstate', onHashChange)
+    return () => {
+      window.removeEventListener('hashchange', onHashChange)
+      window.removeEventListener('popstate', onHashChange)
+    }
   }, [])
 
   useEffect(() => {
@@ -144,14 +141,16 @@ export default function App() {
       if (!ROUTE_IDS.includes(id)) return
       setQuizOpen(false)
       setCartOpen(false)
-      if (id === 'shop') setCategory('all')
-      const current = routeFromHash()
+      if (id === 'shop') { setCategory('all'); setSearchQuery('') }
+      const current = routeFromLocation()
       if (!current.product && current.page === id) {
         setRoute(current)
         window.scrollTo({ top: 0, behavior: 'smooth' })
         return
       }
-      window.location.hash = id
+      window.history.pushState(null, '', `/#${id}`)
+      setRoute({ page: id, product: null })
+      window.scrollTo({ top: 0, behavior: 'auto' })
     },
     [],
   )
@@ -201,72 +200,69 @@ export default function App() {
   const closeCart = useCallback(() => setCartOpen(false), [])
 
   return (
-    <div className="flex min-h-screen flex-col bg-jora-soft">
-      <a
-        href="#content"
-        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-jora-navy focus:px-5 focus:py-3 focus:text-xs focus:uppercase focus:tracking-[0.16em] focus:text-white"
-      >
-        Skip to content
-      </a>
-
-      <Header
-        page={page}
-        onNavigate={navigate}
-        cartCount={cart.count}
-        onOpenCart={openCart}
-      />
-
-      <main
-        id="content"
-        key={`${page}-${product?.id ?? 'page'}`}
-        tabIndex={-1}
-        className="anim-fade flex-1 outline-none"
-      >
-        <Page
+    <StorefrontLayout
+      routeKey={`${page}-${product?.id ?? 'page'}`}
+      header={
+        <Header
           page={page}
-          product={product}
-          category={category}
+          onNavigate={navigate}
+          cartCount={cart.count}
+          onOpenCart={openCart}
+          onSearch={(query) => { navigate('shop'); setSearchQuery(query) }}
+        />
+      }
+      footer={
+        <Footer
           onNavigate={navigate}
           onShopCategory={shopCategory}
-          onCategoryChange={setCategory}
-          onOpenQuiz={() => setQuizOpen(true)}
-          onAddToCart={addToCart}
-          onOpenCart={openCart}
           onOpenPrivacy={openPrivacy}
         />
-      </main>
-
-      <Footer
+      }
+      navigation={<MobileTabs page={page} onNavigate={navigate} />}
+      overlays={
+        <>
+          {cartOpen && (
+            <CartDrawer
+              items={cart.items}
+              count={cart.count}
+              subtotal={cart.subtotal}
+              onClose={closeCart}
+              onUpdateQuantity={cart.updateQuantity}
+              onRemove={cart.remove}
+              onClear={cart.clear}
+              onNavigate={navigate}
+            />
+          )}
+          {toast && (
+            <Toast
+              message={toast.message}
+              onViewCart={openCart}
+              onDismiss={() => setToast(null)}
+            />
+          )}
+          {quizOpen && <Quiz onClose={closeQuiz} onNavigate={navigate} />}
+          <PrivacyPopup
+            open={privacyOpen}
+            onAccept={acknowledgePrivacy}
+            onReadPolicy={readPrivacy}
+          />
+        </>
+      }
+    >
+      <Page
+        page={page}
+        product={product}
+        category={category}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
         onNavigate={navigate}
         onShopCategory={shopCategory}
+        onCategoryChange={setCategory}
+        onOpenQuiz={() => setQuizOpen(true)}
+        onAddToCart={addToCart}
+        onOpenCart={openCart}
         onOpenPrivacy={openPrivacy}
       />
-      <StickyWhatsApp />
-      {cartOpen && (
-        <CartDrawer
-          items={cart.items}
-          count={cart.count}
-          subtotal={cart.subtotal}
-          onClose={closeCart}
-          onUpdateQuantity={cart.updateQuantity}
-          onRemove={cart.remove}
-          onClear={cart.clear}
-          onNavigate={navigate}
-        />
-      )}
-      {toast && (
-        <Toast
-          message={toast.message}
-          onViewCart={openCart}
-          onDismiss={() => setToast(null)}
-        />
-      )}
-      {quizOpen && <Quiz onClose={closeQuiz} onNavigate={navigate} />}
-      <PrivacyPopup
-        open={privacyOpen}
-        onAccept={acknowledgePrivacy}
-        onReadPolicy={readPrivacy}
-      />
-    </div>
+    </StorefrontLayout>
   )
 }

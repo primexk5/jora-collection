@@ -1,8 +1,8 @@
-import { CATEGORIES } from '../data/products'
-import { GENERAL_ORDER_LINK, NAV, SITE, waLink } from '../lib/site'
-import CurveDivider from './CurveDivider'
-import { ArrowIcon, PhoneIcon, PinIcon, SocialIcon, WhatsAppIcon } from './Icons'
-import Logo from './Logo'
+import { CATEGORIES } from '../../data/products'
+import { GENERAL_ORDER_LINK, NAV, SITE, waLink } from '../../lib/site'
+import CurveDivider from '../atoms/CurveDivider'
+import { ArrowIcon, PhoneIcon, PinIcon, SocialIcon, WhatsAppIcon } from '../atoms/Icons'
+import Logo from '../atoms/Logo'
 
 const YEAR = new Date().getFullYear()
 

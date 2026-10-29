@@ -1,16 +1,58 @@
-# React + Vite
+# JORA Collection
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+React + Vite storefront. Run `npm ci`, then `npm run dev` for local development.
 
-Currently, two official plugins are available:
+## Build and verify
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```sh
+npm run build
+npm test
+npm run lint
+```
 
-## React Compiler
+The build generates one static HTML document per product in `dist/product/`, with product-specific Open Graph tags already in the HTML head. JavaScript is not required to read these tags. The React app reads `/product/<id>` to show the correct product. Existing `#bag/<id>` bookmarks remain supported.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Vercel hosting
 
-## Expanding the Oxlint configuration
+Use `frontend` as the Vercel project root, `npm run build` as the build command, and `dist` as the output directory. `vercel.json` enables clean URLs so `/product/ada-top-handle` serves `dist/product/ada-top-handle.html`. Do not add a catch-all rewrite to the homepage: it would mask the product metadata.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+The canonical origin is `https://jora-collection.vercel.app`, configured in `src/lib/site.js`. Update it and rebuild if the domain changes. Deploy all of `dist`, including `product` and `og`. Preview images in `public/og` are 800 × 800 JPEGs under 300 KB. When adding products, add a matching optimized preview image; missing or oversized images fail the build.
+
+## WhatsApp orders
+
+The order popup has one green action linking directly to `https://wa.me/2347063374333?text=...`, with the message encoded using `encodeURIComponent`. Each item includes its name, colour, style, size, quantity, prices and its own product URL line. Subtotal and item count follow. No clipboard, sharing menu, downloads or attachments are involved.
+
+WhatsApp decides whether to display link previews and how many cards to show. A separate line for each URL does not guarantee a separate preview card. The customer must still send the prefilled message.
+
+### Phone acceptance check (after deployment)
+
+1. Open a product URL directly on the live domain and refresh it; confirm the correct product loads.
+2. Add two different bags with different quantities and colours, then open the order popup.
+3. Expand **Review order details** and confirm both products, selections, prices, URLs and subtotal.
+4. Tap **Open JORA chat with order details** on a phone with WhatsApp installed. Confirm the destination is JORA Collection, **0706 337 4333**, and the order text is prefilled without any clipboard or file prompts.
+5. Allow time for WhatsApp to load a preview; test each product URL individually as well as the multi-item order. Confirm the image, name and price match. Previews must be enabled in WhatsApp's privacy settings. Record the phone OS and WhatsApp version and which cards the app actually displays.
+
+The automated checks validate generated HTML, actual JPEG dimensions and sizes, routing, item details, totals and the encoded WhatsApp destination. They do not simulate WhatsApp or confirm device previews.
+
+## Frontend structure
+
+```text
+src/
+  assets/brand/           Brand reference files
+  components/
+    atoms/               Icons, logo, bag artwork and dividers
+    molecules/           Small controls, headings and feedback
+    organisms/           Navigation, product displays and order flows
+    templates/           Shared page layout and content slots
+  pages/                 Route-specific page compositions
+  hooks/                 Shared React state and effects
+  data/                  Product catalogue and site content
+  lib/                   Routing, search and order logic
+  styles/                Global styles and design tokens
+  App.jsx                Application state and route composition
+  main.jsx               React entry point
+```
+
+Place reusable visual primitives in atoms and small combinations in molecules. Organisms compose larger sections and interactive flows. Templates define page structure; pages supply route content. Keep business logic in `lib` or hooks rather than the visual layers. Use direct imports from each component's layer. Static public assets and build scripts stay outside `src`.
+
+Mobile tabs link to Home, Shop, New In, Lookbook and Contact. The shopping bag remains available from the header.

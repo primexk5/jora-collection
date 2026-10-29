@@ -165,3 +165,7 @@ export function SocialIcon({ name, className = 'h-4 w-4' }) {
   const Icon = SOCIAL_ICONS[name]
   return Icon ? <Icon className={className} /> : null
 }
+
+export function SearchIcon({ className = 'h-5 w-5' }) {
+  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" aria-hidden="true" className={className}><circle cx="10.5" cy="10.5" r="6.5" /><path d="m16 16 4.5 4.5" /></svg>
+}

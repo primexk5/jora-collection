@@ -1,4 +1,4 @@
-import OrderButton from '../components/OrderButton'
+import OrderButton from '../components/organisms/OrderButton'
 import { useMemo, useState } from 'react'
 import {
   CATEGORIES,
@@ -13,9 +13,9 @@ import {
   priceFor,
 } from '../data/products'
 import { formatNaira } from '../lib/site'
-import BagArt from '../components/BagArt'
-import ProductGrid from '../components/ProductGrid'
-import QuantityStepper from '../components/QuantityStepper'
+import BagArt from '../components/atoms/BagArt'
+import ProductGrid from '../components/organisms/ProductGrid'
+import QuantityStepper from '../components/molecules/QuantityStepper'
 import {
   ArrowIcon,
   ClockIcon,
@@ -23,7 +23,7 @@ import {
   PinIcon,
   PlusIcon,
   WhatsAppIcon,
-} from '../components/Icons'
+} from '../components/atoms/Icons'
 
 const BADGE_STYLES = {
   New: 'bg-jora-red text-white',

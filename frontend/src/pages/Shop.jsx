@@ -1,22 +1,23 @@
+import { searchProducts } from '../lib/search'
 import { useState } from 'react'
-import { ArrowIcon, GiftIcon, SparkIcon, WhatsAppIcon } from '../components/Icons'
-import ProductGrid from '../components/ProductGrid'
-import SectionHeading from '../components/SectionHeading'
+import { ArrowIcon, GiftIcon, SearchIcon, SparkIcon, WhatsAppIcon } from '../components/atoms/Icons'
+import ProductGrid from '../components/organisms/ProductGrid'
+import SectionHeading from '../components/molecules/SectionHeading'
 import { CATEGORIES, PRODUCTS } from '../data/products'
 import useScrollReveal from '../hooks/useScrollReveal'
 import { GENERAL_ORDER_LINK, SITE } from '../lib/site'
 
 const INITIAL_VISIBLE = 8
 
-export default function Shop({ category, onCategoryChange, onOpenQuiz }) {
+export default function Shop({ category, onCategoryChange, onOpenQuiz, searchQuery, onSearchChange }) {
   const [expansion, setExpansion] = useState({ category: null, expanded: false })
-  const filtered = category === 'all' ? PRODUCTS : PRODUCTS.filter((item) => item.category === category)
+  const filtered = searchProducts(category === 'all' ? PRODUCTS : PRODUCTS.filter((item) => item.category === category), searchQuery)
   const activeCategory = CATEGORIES.find((item) => item.id === category)
-  const showAll = expansion.category === category && expansion.expanded
+  const showAll = expansion.category === category && expansion.query === searchQuery && expansion.expanded
   const visible = showAll ? filtered : filtered.slice(0, INITIAL_VISIBLE)
   const hiddenCount = filtered.length - visible.length
 
-  useScrollReveal(`${category}-${showAll}`)
+  useScrollReveal(`${category}-${searchQuery}-${showAll}`)
 
   const changeCategory = (id) => {
     setExpansion({ category: null, expanded: false })
@@ -48,7 +49,12 @@ export default function Shop({ category, onCategoryChange, onOpenQuiz }) {
             </p>
           </div>
 
-          <div className="no-scrollbar -mx-1 mt-8 flex gap-2 overflow-x-auto px-1 pb-1">
+          <div role="search" className="relative mt-6 max-w-lg">
+            <label htmlFor="shop-search" className="sr-only">Search the collection</label>
+            <SearchIcon className="pointer-events-none absolute left-4 top-3.5 h-5 w-5 text-jora-charcoal/40" />
+            <input id="shop-search" type="search" value={searchQuery} onChange={(event) => onSearchChange(event.target.value)} placeholder="Search bags, colours, styles…" className="w-full rounded-xl border border-jora-charcoal/15 bg-white py-3 pl-12 pr-4 text-base outline-none focus:border-jora-red" />
+          </div>
+          <div className="no-scrollbar -mx-1 mt-6 flex gap-2 overflow-x-auto px-1 pb-1">
             <button
               type="button"
               onClick={() => changeCategory('all')}
@@ -89,7 +95,7 @@ export default function Shop({ category, onCategoryChange, onOpenQuiz }) {
                 <div className="mt-10 flex flex-col items-center gap-2">
                   <button
                     type="button"
-                    onClick={() => setExpansion({ category, expanded: true })}
+                    onClick={() => setExpansion({ category, query: searchQuery, expanded: true })}
                     aria-expanded={false}
                     aria-controls="shop-products"
                     className="btn-sweep inline-flex items-center gap-2 rounded-full bg-jora-navy px-6 py-3.5 text-[10px] font-medium uppercase tracking-[0.16em] text-white"
@@ -106,11 +112,11 @@ export default function Shop({ category, onCategoryChange, onOpenQuiz }) {
             </div>
           ) : (
             <div className="rounded-[2rem] border border-jora-charcoal/10 bg-jora-soft px-6 py-16 text-center">
-              <p className="font-display text-2xl text-jora-charcoal">Nothing here yet.</p>
+              <p className="font-display text-2xl text-jora-charcoal">{searchQuery.trim() ? 'No bags match your search.' : 'Nothing here yet.'}</p>
               <p className="mx-auto mt-2 max-w-sm text-sm text-jora-charcoal/55">
-                This shape is restocking. Message us on WhatsApp and we will let you know the
-                moment it lands.
+                {searchQuery.trim() ? 'Try another name, colour or style, or clear your search to browse more bags.' : 'This shape is restocking. Message us on WhatsApp and we will let you know the moment it lands.'}
               </p>
+              {searchQuery.trim() && <button type="button" onClick={() => { onSearchChange(''); onCategoryChange('all') }} className="mt-4 block w-full text-sm font-medium text-jora-red underline">Clear search & filters</button>}
               <a
                 href={GENERAL_ORDER_LINK}
                 target="_blank"

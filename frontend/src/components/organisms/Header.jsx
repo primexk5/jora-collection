@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
-import { GENERAL_ORDER_LINK, NAV, SITE } from '../lib/site'
-import { BagIcon, CloseIcon, MenuIcon, PhoneIcon, WhatsAppIcon } from './Icons'
-import Logo from './Logo'
+import { GENERAL_ORDER_LINK, NAV, SITE } from '../../lib/site'
+import { BagIcon, CloseIcon, MenuIcon, PhoneIcon, SearchIcon, WhatsAppIcon } from '../atoms/Icons'
+import Logo from '../atoms/Logo'
 
-export default function Header({ page, onNavigate, cartCount = 0, onOpenCart }) {
+export default function Header({ page, onNavigate, cartCount = 0, onOpenCart, onSearch }) {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [searchOpen, setSearchOpen] = useState(false)
+  const [query, setQuery] = useState('')
 
   useEffect(() => {
     if (!menuOpen) return undefined
@@ -17,12 +19,13 @@ export default function Header({ page, onNavigate, cartCount = 0, onOpenCart }) 
 
   const go = (id) => {
     setMenuOpen(false)
+    setSearchOpen(false)
     onNavigate(id)
   }
 
   return (
     <>
-      <div className="bg-jora-navy text-white">
+      <div className="hidden bg-jora-navy text-white md:block">
         <div className="shell flex h-8 items-center justify-center sm:h-9 sm:justify-between gap-4">
           <p className="truncate text-[10px] uppercase tracking-[0.18em] text-white/75 sm:text-[11px]">
             {SITE.freeDeliveryNote}
@@ -38,7 +41,22 @@ export default function Header({ page, onNavigate, cartCount = 0, onOpenCart }) 
       </div>
 
       <header className="sticky top-0 z-40 border-b border-jora-charcoal/10 bg-jora-soft/90 backdrop-blur-xl">
-        <div className="shell flex h-16 items-center justify-between gap-3 md:h-[74px] md:gap-6">
+        <div className="shell relative flex h-20 items-center justify-between bg-white md:hidden">
+          <button type="button" onClick={() => setSearchOpen((open) => !open)} aria-label={searchOpen ? 'Close search' : 'Search bags'} aria-expanded={searchOpen} aria-controls="mobile-search" className="grid h-11 w-11 place-items-center rounded-full text-jora-charcoal transition hover:bg-jora-soft">{searchOpen ? <CloseIcon /> : <SearchIcon />}</button>
+          <a href="/#home" onClick={(event) => { event.preventDefault(); go('home') }} aria-label="JORA Collection — home" className="absolute left-1/2 -translate-x-1/2"><Logo compact /></a>
+          <button type="button" onClick={onOpenCart} aria-label={`Open shopping bag, ${cartCount} items`} className="relative grid h-11 w-11 place-items-center rounded-full text-jora-charcoal"><BagIcon className="h-5 w-5" />{cartCount > 0 && <span className="absolute right-0 top-0 grid h-4 min-w-4 place-items-center rounded-full bg-jora-red px-1 text-[8px] text-white">{cartCount > 99 ? '99+' : cartCount}</span>}</button>
+        </div>
+        {searchOpen && <form id="mobile-search" role="search" onSubmit={(event) => {
+          event.preventDefault()
+          onSearch(query.trim())
+          setSearchOpen(false)
+        }} onKeyDown={(event) => { if (event.key === 'Escape') setSearchOpen(false) }} className="flex gap-2 bg-white px-5 pb-4 md:hidden">
+          <label htmlFor="header-search" className="sr-only">Search bags</label>
+          <input id="header-search" type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search bags, colours, styles…" autoFocus className="min-w-0 flex-1 rounded-xl border border-jora-charcoal/15 bg-jora-soft px-4 py-3 text-base outline-none focus:border-jora-red" />
+          <button type="submit" className="rounded-xl bg-jora-red px-4 text-sm font-medium text-white">Search</button>
+        </form>}
+        <div className="flex h-9 items-center justify-center bg-jora-red px-3 text-center text-[clamp(7px,2.2vw,9px)] font-medium uppercase tracking-[0.15em] text-white md:hidden">Nationwide delivery · Personal service on WhatsApp</div>
+        <div className="shell hidden h-[74px] items-center justify-between gap-6 md:flex">
           <a
             href="#home"
             onClick={(event) => {
@@ -116,7 +134,7 @@ export default function Header({ page, onNavigate, cartCount = 0, onOpenCart }) 
         </div>
 
         {menuOpen && (
-          <div id="mobile-menu" className="anim-fade border-t border-jora-charcoal/10 bg-jora-soft lg:hidden">
+          <div id="mobile-menu" className="anim-fade max-h-[calc(100dvh-12rem)] overflow-y-auto border-t border-jora-charcoal/10 bg-jora-soft hidden md:block lg:hidden">
             <nav aria-label="Mobile navigation" className="shell py-4">
               {NAV.map((item) => {
                 const active = page === item.id

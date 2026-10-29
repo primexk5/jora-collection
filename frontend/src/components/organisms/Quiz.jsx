@@ -1,9 +1,9 @@
 import OrderButton from './OrderButton'
 import { useEffect, useRef, useState } from 'react'
-import { PRODUCTS } from '../data/products'
-import { formatNaira } from '../lib/site'
-import BagArt from './BagArt'
-import { ArrowIcon, CloseIcon, SparkIcon, WhatsAppIcon } from './Icons'
+import { PRODUCTS } from '../../data/products'
+import { formatNaira } from '../../lib/site'
+import BagArt from '../atoms/BagArt'
+import { ArrowIcon, CloseIcon, SparkIcon, WhatsAppIcon } from '../atoms/Icons'
 
 const QUESTIONS = [
   {

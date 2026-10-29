@@ -1,11 +1,11 @@
-import { CheckIcon, CloseIcon } from './Icons'
+import { CheckIcon, CloseIcon } from '../atoms/Icons'
 
 export default function Toast({ message, onViewCart, onDismiss }) {
   return (
     <div
       role="status"
       aria-live="polite"
-      className="anim-toast fixed bottom-6 left-4 right-4 z-50 flex items-center gap-3 rounded-2xl bg-jora-navy px-4 py-3 text-white sm:right-auto sm:max-w-sm"
+      className="anim-toast fixed bottom-[calc(5.5rem+env(safe-area-inset-bottom))] md:bottom-6 left-4 right-4 z-50 flex items-center gap-3 rounded-2xl bg-jora-navy px-4 py-3 text-white sm:right-auto sm:max-w-sm"
     >
       <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-jora-red text-white">
         <CheckIcon className="h-4 w-4" />

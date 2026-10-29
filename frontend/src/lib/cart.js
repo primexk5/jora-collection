@@ -1,24 +1,19 @@
-import { getColor, getProduct, getSize, priceFor } from '../data/products'
-import { formatNaira } from './site'
+import { CATEGORIES, getColor, getProduct, getSize, priceFor } from '../data/products.js'
+import { SITE, formatNaira } from './site.js'
 
-function siteRoot() {
-  const base = import.meta.env.BASE_URL || '/'
-  return new URL(base, `${window.location.origin}/`).href
-}
-
-export function productImageUrl(productId, colorId) {
-  return new URL(`bags/${productId}-${colorId}.png`, siteRoot()).href
+export function productPath(productId) {
+  return `/product/${encodeURIComponent(productId)}`
 }
 
 export function productPageUrl(productId) {
-  return `${siteRoot()}#bag/${productId}`
+  return new URL(productPath(productId), SITE.url).href
 }
 
 export function resolveItem(item) {
   const product = item.product ?? getProduct(item.productId)
   if (!product) return null
-  const color = typeof item.color === 'string' ? getColor(product, item.color) : item.color
-  const size = typeof item.size === 'string' ? getSize(product, item.size) : item.size
+  const color = typeof item.color === 'object' && item.color ? item.color : getColor(product, item.color)
+  const size = typeof item.size === 'object' && item.size ? item.size : getSize(product, item.size)
   const unitPrice = item.unitPrice ?? priceFor(product, size.label)
   return { product, color, size, unitPrice }
 }
@@ -36,10 +31,12 @@ export function cartMessage(items) {
     subtotal += unitPrice * item.quantity
     lines.push(`*${index + 1}. ${product.name}*`)
     lines.push(`Colour: ${color.name}`)
+    lines.push(`Style: ${CATEGORIES.find((category) => category.id === product.category)?.label ?? product.variant}`)
     lines.push(`Size: ${size.label} (${size.dimensions})`)
     lines.push(`Quantity: ${item.quantity}`)
     lines.push(`Unit price: ${formatNaira(unitPrice)}`)
     lines.push(`*Item total: ${formatNaira(unitPrice * item.quantity)}*`)
+    lines.push(productPageUrl(product.id))
     lines.push('')
   })
 

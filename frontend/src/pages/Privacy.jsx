@@ -1,6 +1,6 @@
 import { PRIVACY_SECTIONS, PRIVACY_UPDATED } from '../data/privacy'
 import { SITE, waLink } from '../lib/site'
-import { PhoneIcon, ShieldIcon, WhatsAppIcon } from '../components/Icons'
+import { PhoneIcon, ShieldIcon, WhatsAppIcon } from '../components/atoms/Icons'
 
 const TOC = [
   ...PRIVACY_SECTIONS.map((section) => ({ id: section.id, title: section.title })),
